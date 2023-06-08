@@ -1,25 +1,21 @@
 # Напишите программу, которая получает целое число и возвращает его шестнадцатеричное строковое представление. 
 # Функцию hex используйте для проверки своего результата.
 
-# В задании сказано только про шестнадтцатиричную систему, но захотелось написать более универсальный метод.
 
 
-def trans(integer, system):
-    result = 0
-    sup = 10
-    power = 0
+def trans(integer):
+    result = ""
+    symbols = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"]
     while integer > 0:
-        result += (integer % system)*(sup**power)
-        power += 1
-        integer = integer // system
-    return str(result)
+        result += str(symbols[(integer % 16)])  # А что лучше, сразу задать чисто строковый массив или переводить элементы массива с строки, зато не надо будет каждый в кавычки брать?
+        integer = integer // 16
+    return f"Ox{result[::-1]}"
 
 
 while True:
     try:
         integer = int(input("Введите число: "))
-        SYSTEM = 16 # Так как в задании указана шестнадцатиричная система, то в качестве констатнты ввела 16, чтобы потом прощебыло менять систему при необходимости
-        result = trans(integer,SYSTEM)
+        result = trans(integer)
         print(result)
         break
     except:
