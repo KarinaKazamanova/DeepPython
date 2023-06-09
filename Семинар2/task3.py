@@ -31,7 +31,7 @@ while True:
     try:
         a, b = (int(i) for i in frac_parse(input("Введите первую дробь ")))
         c, d = (int(i) for i in frac_parse(input("Введите вторую дробь ")))
-        print(fraction_calc(int(a), b, c, d))
+        print(fraction_calc(a, b, c, d))
         break
     except:
         print("Вы ввели что-то не то")
