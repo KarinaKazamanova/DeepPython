@@ -1,0 +1,3 @@
+class Amountexception(Exception):
+    pass
+
