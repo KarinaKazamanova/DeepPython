@@ -54,5 +54,5 @@ class Atm:
         elif answer in ["нет", "н", "n", "no"]:
             return False
         else:
-            raise Exception("Я Вас не понял,, повторите, пожалуйста")
+            raise AnswerError.AnswerError("Я Вас не понял,, повторите, пожалуйста")
 
