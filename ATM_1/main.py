@@ -26,7 +26,7 @@ while not stop_flag:
                     break
                 except Exception as exc:
                     print(exc)
-                    continue
+                    
 
         case ["внести"] | ["пополнить"]:
             
@@ -39,7 +39,7 @@ while not stop_flag:
                     break
                 except Exception as exc:
                     print(exc)
-                    continue
+                    
         case _:
             print("Не понял Вас, повторите Ваш запрос, пожауйста\n")
             continue
@@ -55,7 +55,7 @@ while not stop_flag:
             break
         except Exception as exc:
             print(exc)
-            continue
+            continue # Не нужно!!!
 
 
 
