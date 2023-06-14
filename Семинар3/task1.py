@@ -34,11 +34,16 @@ def find_items_everybody_except_one_has(input_dict):
     items_everybody_has = find_items_everybody_has(input_dict)
     unique_items = find_unique_items(input_dict)
     total_items = []
+    result_dict = {}
     for value in input_dict.values():
         for j in range(len(value)):
             total_items.append(value[j]) 
     result_list_of_items = set(total_items) - items_everybody_has - unique_items
-    return result_list_of_items
+    for key, value in input_dict.items():
+         for item in result_list_of_items:
+             if item not in value:
+                 result_dict[key] = item
+    return result_dict
 
 def trip(number_of_people: int, number_of_items: int):
     
