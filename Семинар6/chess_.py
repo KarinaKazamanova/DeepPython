@@ -1,6 +1,8 @@
 import random
 
-
+# axe_x - координаты фигуры по оси х,
+# axe_y - координаты фигуры по оси y,
+# если представить шахматную доску, как координатную плоскость
 def eight_queens(axe_x, axe_y):
     flag = True
     for i in range(8):
