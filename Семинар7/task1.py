@@ -26,6 +26,7 @@ def group_renaming(wanted_name,  \
                     final_file_name = initial_name[first_old_naming_letter - 1:last_old_naming_letter] \
                                  + wanted_name + naming_count + "." + new_file_extension
                     os.rename(os.path.join(file), final_file_name)
+                    file_count += 1
                 else:
                     print("Out of files")
                     break
