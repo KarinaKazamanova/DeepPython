@@ -31,5 +31,5 @@ def group_renaming(wanted_name,  \
                     print("Out of files")
                     break
                 
-
-group_renaming("new_file", "txt", "pdf", 1, 3)
+if __name__ == "__main__":
+    group_renaming("new_file", "txt", "pdf", 1, 3)
