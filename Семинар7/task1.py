@@ -10,11 +10,11 @@
 import os
 
 
-def group_renaming(wanted_name, count_of_numbers, \
+def group_renaming(wanted_name,  \
                    old_file_extension, \
                    new_file_extension, \
                    first_old_naming_letter, \
-                   last_old_naming_letter):
+                   last_old_naming_letter, count_of_numbers=3):
     naming_count = "0" * count_of_numbers
     file_count = 1
     for file in (os.listdir()):
@@ -31,4 +31,4 @@ def group_renaming(wanted_name, count_of_numbers, \
                     break
                 
 
-group_renaming("new_file", 3, "txt", "pdf", 1,3)
+group_renaming("new_file", "txt", "pdf", 1, 3)
