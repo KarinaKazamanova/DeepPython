@@ -14,54 +14,56 @@ import pickle
 
 def directory_info(result_dict, path):
     os.chdir(path)
-    # if os.access(path, mode=7) ==:
+    if os.access(path, mode=7):  
     # if os.path.exists(path):   # print( os.access(path, mode=0o777))
     
-    flag = True
-    files_size = 0
-    for item in os.listdir(path):
-        if os.path.isdir(item):
-            flag = False
-
-    if flag:
+        flag = True
+        files_size = 0
         for item in os.listdir(path):
+            if os.path.isdir(item):
+                flag = False
+
+        if flag:
+            for item in os.listdir(path):
+                parent_directory = str(os.path.join(os.getcwd()))
+                if parent_directory in result_dict:
+                        result_dict[parent_directory].update({f"{item} - file":os.path.getsize(item)})
+                else:
+                        result_dict[parent_directory] = {f"{item} - file":os.path.getsize(item)}
+                files_size += os.path.getsize(item)
+            result_dict[parent_directory].update({f"{parent_directory} - directory":files_size})
+            os.chdir(os.pardir)
+            
+
+                    
+        else:
+
+            list_of_directories = [dir for dir in os.listdir(path) if os.path.isdir(dir)]
+            list_of_files = [file for file in os.listdir(path) if os.path.isfile(file)]
+            
             parent_directory = str(os.path.join(os.getcwd()))
-            if parent_directory in result_dict:
+        
+            for item in list_of_files:
+                
+                if parent_directory in result_dict:
                     result_dict[parent_directory].update({f"{item} - file":os.path.getsize(item)})
-            else:
+                else:
                     result_dict[parent_directory] = {f"{item} - file":os.path.getsize(item)}
-            files_size += os.path.getsize(item)
-        result_dict[parent_directory].update({f"{parent_directory} - directory":files_size})
-        os.chdir(os.pardir)
-        
 
+                files_size += os.path.getsize(item)
+            
+            
+            for  item in list_of_directories: 
                 
+                current_path = os.path.realpath(item) 
+                directory_info(result_dict, current_path )
+                files_size += directory_size(current_path)
+            result_dict[parent_directory].update({f"{parent_directory} - directory": files_size})        
+                    
+                    
+        return result_dict
     else:
-
-        list_of_directories = [dir for dir in os.listdir(path) if os.path.isdir(dir)]
-        list_of_files = [file for file in os.listdir(path) if os.path.isfile(file)]
-        
-        parent_directory = str(os.path.join(os.getcwd()))
-      
-        for item in list_of_files:
-            
-            if parent_directory in result_dict:
-                result_dict[parent_directory].update({f"{item} - file":os.path.getsize(item)})
-            else:
-                result_dict[parent_directory] = {f"{item} - file":os.path.getsize(item)}
-
-            files_size += os.path.getsize(item)
-        
-        
-        for  item in list_of_directories: 
-            
-            current_path = os.path.realpath(item) 
-            directory_info(result_dict, current_path )
-            files_size += directory_size(current_path)
-        result_dict[parent_directory].update({f"{parent_directory} - directory": files_size})        
-                
-                
-    return result_dict
+        print("ВВам отказано в доступе")
 
 
    
