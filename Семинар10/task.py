@@ -30,6 +30,12 @@ class Fraction():
             self.denominator = denominator
         else:
             raise ValueError
+        
+    def reduce_fraction(self):
+        while math.gcd(self.numerator, self.denominator) > 1:
+            self.numerator = int(self.numerator / math.gcd(self.numerator, self.denominator))
+            self.denominator = int(self.denominator / math.gcd(self.numerator, self.denominator))
+        return Fraction(self.numerator, self.denominator)
 
     def __str__(self):
         return f"{self.numerator}/{self.denominator}"
@@ -41,10 +47,8 @@ class Fraction():
         d = other.denominator
         new_nominator = int((a * d + c * b) / math.gcd(a * d + c * b, b * d))
         new_denominator = int((b * d) / math.gcd(a * d + c * b, b * d))
-        while math.gcd(new_nominator, new_denominator) > 1:
-            new_nominator = int(new_nominator / math.gcd(new_nominator, new_denominator))
-            new_denominator = int(new_denominator / math.gcd(new_nominator, new_denominator))
-        return Fraction(new_nominator, new_denominator)
+        
+        return Fraction(new_nominator, new_denominator).reduce_fraction()
     
 
     def __mul__(self, other):
@@ -54,10 +58,8 @@ class Fraction():
         d = other.denominator
         new_nominator = int((a * c) / math.gcd(a * c, b * d))
         new_denominator = int((b * d) / math.gcd(a * c, b * d))
-        while math.gcd(new_nominator, new_denominator) > 1:
-            new_nominator = int(new_nominator / math.gcd(new_nominator, new_denominator))
-            new_denominator = int(new_denominator / math.gcd(new_nominator, new_denominator))
-        return Fraction(new_nominator, new_denominator)
+       
+        return Fraction(new_nominator, new_denominator).reduce_fraction()
     
 
     def __truediv__(self, other):
@@ -71,15 +73,14 @@ class Fraction():
         d = other.denominator
         new_nominator = int((a * d - c * b) / math.gcd(a * d - c * b, b * d))
         new_denominator = int((b * d) / math.gcd(a * d - c * b, b * d))
-        while math.gcd(new_nominator, new_denominator) > 1:
-            new_nominator = int(new_nominator / math.gcd(new_nominator, new_denominator))
-            new_denominator = int(new_denominator / math.gcd(new_nominator, new_denominator))
-        return Fraction(new_nominator, new_denominator)
+        return Fraction(new_nominator, new_denominator).reduce_fraction()
     
     def __pow__(self, other):
         new_nominator = self.numerator ** other.numerator ** (1/other.denominator)
         new_denominator = self.denominator ** other.numerator ** (1/other.denominator)
         return new_nominator / new_denominator
+    
+    
     
 
 frac_1 = Fraction(2, 6)
