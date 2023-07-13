@@ -164,7 +164,9 @@ class Student:
 
 stt_one  = Student()
 
-print(stt_one)
+with stt_one as st:
+    print(st)
+
 
 
 
