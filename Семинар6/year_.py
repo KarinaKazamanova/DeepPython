@@ -17,5 +17,9 @@ def my_date():
             return True
         elif month in [4, 6, 9, 11] and 1 <= day <= 30:
             return True
+        elif month == 2 and 1 <= day <= 28:
+            return True
         else:
             return _leap_year(year) and day <= 29
+        
+print(my_date())
