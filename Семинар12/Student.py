@@ -4,7 +4,29 @@
 # ○Для каждого предмета можно хранить оценки (от 2 до 5) и результаты тестов (от 0 до 100). 
 # ○Также экземпляр должен сообщать средний балл по тестам для каждого предмета и по оценкам всех предметов вместе взятых.
 import csv
+class MarkError(Exception):
+    def __init__(self, *args):
+        self.string = args[0]
+        super().__init__(*args)
 
+    def __str__(self):
+        return f"Проставляемая оценка выходит за диапозон используемой школой шкалы оценивания"
+    
+class BegNameError(Exception):
+    def __init__(self, *args):
+        self.string = args[0]
+        super().__init__(*args)
+
+    def __str__(self):
+        return f"Значение {self.string} должно начинатья с заглавной буквы, а остальные символы должны быть строчными"
+    
+class LetterNameError(Exception):
+    def __init__(self, *args):
+        self.string = args[0]
+        super().__init__(*args)
+
+    def __str__(self):
+        return f"Значение {self.string} должно содерджать только буквы"
 
 class Fullname:
     def __init__(self):
@@ -29,11 +51,11 @@ class Fullname:
     
     def validate(self, value):
         if value.isalpha():
-            if not value == value.lower().capitalize():
-                raise ValueError(f"Значение {value} должно начинастя с заглавной буквы, а остальные символы должны быть строчными")
+            if not value.istitle():
+                raise ValueError(f"{value}")
 
         else:
-            raise ValueError(f"Значение {value} должно содерджать только буквы")
+            raise ValueError(f"{value}")
  
 class Mark:
     
@@ -61,11 +83,9 @@ class Mark:
     def validate(self, value):
         if not isinstance(value, int):
             
-            raise ValueError(f"Значение {value} должно начинастя с заглавной буквы, а остальные символы должны быть строчными")
-        if value < 2:
-            self.value = 2 # Или лучше None вернуть
-        if value >  5:
-            self.value = 5 # Или лучше None вернуть
+            raise ValueError(f"Значение {value} должно быть числовым")
+        if value < 2 or value > 5:
+            raise MarkError("")
 
 class Score:
     def __init__(self,minimum_mark,maximum_mark ):
@@ -93,10 +113,8 @@ class Score:
         if not isinstance(value, int):
             
             raise ValueError(f"Значение {value} должно начинастя с заглавной буквы, а остальные символы должны быть строчными")
-        if value < 0:
-            self.value = 0 # Или лучше None вернуть
-        if value >  100:
-            self.value = 100 # Или лучше None вернуть
+        if value < 0 or value > 100:
+            raise ValueError("Итоговый результат должен быть в диапозоне от 0 до 100 баллов")
 
     
 
@@ -109,19 +127,26 @@ class Student:
     _subjects = []
     _subject_score= {}
     _subject_mark = [] # Для целей задачи, похоже, не важно соотнесение полученной оценки с предметом
-   
+    _student_list = []
 
 
-    def __init__(self):
-        self
-        # self.first_name = first_name
-        # self.second_name = second_name
-        # self.last_name = last_name
+    def __init__(self, first_name="New", second_name="New",  
+                 last_name = "New", list_of_subjects=[],
+                 sub_mark=[], sub_score = []):
         
-
-        # self._subject_score = {}
-        # self._subject_mark = []
+        self.first_name = first_name 
+        self.second_name = second_name 
+        self.last_name = last_name 
+        self._subjects = list_of_subjects 
+        self._subject_mark = sub_mark 
+        self._subject_score = sub_score 
     
+
+    def get_s_t(self):
+        return self._student_list
+    
+    def get_s_s(self):
+        return self._subject_score
     @property
     def mark(self):
         return self._mark
@@ -134,38 +159,77 @@ class Student:
     def mark(self, value):
         if 2 <= value < 6:
             self._subject_mark.append(value)
+        elif value < 2:
+            self._subject_mark.append(2)
         else:
-            raise ValueError(f"Проставляемая оценка выходит за диапозон используемой  школой шкалы оценивания") 
+            self._subject_mark.append(5)
+             
         
     @score.setter
     def score(self, subject, score):
+        if subject not in  self._subject_score:
+             self._subject_score[subject] = []
         if 0 <= score < 101:
-            self._subject_score[subject] = score
+            self._subject_score[subject].append(score)
+        elif score < 0:
+            self._subject_score[subject].append(0)
         else:
-            raise ValueError("Итоговый результат должен быть в диапозоне от 0 до 100 баллов")
+            self._subject_score[subject].append(100)
+            
     
     def __str__(self):
         return f"{self.first_name} {self.second_name} {self.last_name}"
     
     def __enter__(self):
         new_file = open("students_data.csv", "r", encoding="utf-8", newline="")
-        csv_file = csv.reader(new_file)
+        csv_file = csv.reader(new_file, dialect="excel", delimiter=" ")
         new_dict = {}
         for line in csv_file:
-            key = f"{line[0]} {line[1]} {line[2]}"
-            new_dict[key].append(line[3])
+          
+                key = f"{line[0]} {line[1]} {line[2]}"
+                if key not in new_dict:
+                    new_dict[key] = [[],[],{}]
+                if line[3] not in new_dict[key][0]:
+                    new_dict[key][0].append(line[3])
+                    new_dict[key][2][line[3]] = []
+                try:
+                    new_dict[key][1].append(int(line[4]))
+                except Exception:
+                    continue
+                try:
+                    new_dict[key][2][line[3]].append(int(line[5]))
+                except Exception:
+                    continue
+           
+        for n_key, value in new_dict.items():
+            if n_key.split()[0] != "first_name":
+                student = Student(n_key.split()[0], n_key.split()[1], n_key.split()[2], value[0], value[1], value[2])
+                self._student_list.append(student)
+        return self
+        new_file.close()
+        
+    def avg_score(self):
+        new_dict = {}
+        for key, i in self._subject_score.items():
+            new_dict[key] = sum(i)/len(i)
         return new_dict
     
-    def __exit__(self,new_file, exc_type, exc_val, exc_tb):
+    def avg_mark(self):
+        return round(sum(self._subject_mark) / len(self._subject_mark),2)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
         
-        new_file.close()
+        
 
 
 
 stt_one  = Student()
 
 with stt_one as st:
-    print(st)
+    for i in st.get_s_t():
+        print(i.avg_mark())
+
 
 
 
