@@ -89,4 +89,4 @@ if __name__ == "__main__":
     n_m_2 = Matrix([7,8], [9,10], [11, 12])
     print(n_m_2 * n_m_1)
     # print(n_m_1.transponse())
-    # doctest.testmod(verbose=True)
+    doctest.testmod(verbose=True)
