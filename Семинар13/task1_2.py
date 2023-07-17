@@ -109,7 +109,7 @@ class Triangle():
       
        
 
-triangle = Triangle(340,270,350)
+triangle = Triangle(389,654,786)
 
 print(triangle)
 
